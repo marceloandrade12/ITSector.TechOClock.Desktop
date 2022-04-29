@@ -4,18 +4,27 @@ import * as path from "path";
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 600,
+    height: 800,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
     },
     width: 800,
+    center: true,
+    show: false,
+    title: "ITSector Tech O'Clock Desktop App",
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "../index.html"));
+  // mainWindow.loadFile(path.join(__dirname, "../index.html"));
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.loadURL("https://itsector-tech-o-clock-web.vercel.app/");
+
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+    // mainWindow.webContents.send("isDesktopApp", true);
+    mainWindow.webContents.executeJavaScript("window.isDesktopApp = true");
+  });
 }
 
 // This method will be called when Electron has finished
