@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 
 function createWindow() {
@@ -8,6 +8,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
+      contextIsolation: true,
     },
     width: 800,
     center: true,
@@ -18,12 +19,14 @@ function createWindow() {
   // and load the index.html of the app.
   // mainWindow.loadFile(path.join(__dirname, "../index.html"));
 
+  // mainWindow.webContents.executeJavaScript("window.isDesktopApp = true");
   mainWindow.loadURL("https://itsector-tech-o-clock-web.vercel.app/");
+
+  mainWindow.webContents.send("isDesktopApp", {});
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
-    // mainWindow.webContents.send("isDesktopApp", true);
-    mainWindow.webContents.executeJavaScript("window.isDesktopApp = true");
+    //
   });
 }
 
@@ -51,3 +54,11 @@ app.on("window-all-closed", () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.handle("OPEN_CONTACTS", async (_, args) => {
+  //
+});
+
+ipcMain.handle("OPEN_LOCATION", async (_, args) => {
+  //
+});

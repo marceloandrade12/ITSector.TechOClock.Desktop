@@ -1,11 +1,14 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 
-import { ipcRenderer } from "electron";
+import { ipcRenderer, contextBridge } from "electron";
 
-ipcRenderer.on("isDesktopApp", function (event, store) {
-  console.log(store);
-  (window as any).techOClock = {
-    isDesktopApp: true,
-  };
+enum BRIDGE_ACTIONS {
+  OPEN_CONTACTS = "OPEN_CONTACTS",
+  OPEN_LOCATION = "OPEN_LOCATION",
+}
+
+contextBridge.exposeInMainWorld("electron", {
+  openContacts: () => ipcRenderer.invoke(BRIDGE_ACTIONS.OPEN_CONTACTS),
+  openLocation: () => ipcRenderer.invoke(BRIDGE_ACTIONS.OPEN_LOCATION),
 });
