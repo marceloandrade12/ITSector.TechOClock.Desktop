@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
+import { execFile } from "child_process";
 
 function createWindow() {
   // Create the browser window.
@@ -16,13 +17,7 @@ function createWindow() {
     title: "ITSector Tech O'Clock Desktop App",
   });
 
-  // and load the index.html of the app.
-  // mainWindow.loadFile(path.join(__dirname, "../index.html"));
-
-  // mainWindow.webContents.executeJavaScript("window.isDesktopApp = true");
   mainWindow.loadURL("https://itsector-tech-o-clock-web.vercel.app/");
-
-  mainWindow.webContents.send("isDesktopApp", {});
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
@@ -55,10 +50,16 @@ app.on("window-all-closed", () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.handle("OPEN_CONTACTS", async (_, args) => {
+// BRIDGE LISTENER METHODS
+
+ipcMain.handle("OPEN_CONTACTS", async () => {
   //
 });
 
-ipcMain.handle("OPEN_LOCATION", async (_, args) => {
-  //
+ipcMain.handle("OPEN_LOCATION", async () => {
+  // open google maps app
+  execFile("C:\\Program Files\\Google\\Chrome\\Application\\chrome_proxy.exe", [
+    "--profile-directory=Default",
+    "--app-id=fbdfdldfleefkdfhpemofdggdlmkoama",
+  ]);
 });
